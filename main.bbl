@@ -1,0 +1,33 @@
+\begin{thebibliography}{1}
+
+\bibitem{blandford2003compact}
+Daniel~K. Blandford, Guy~E. Blelloch, and Ian~A. Kash.
+\newblock Compact representations of separable graphs.
+\newblock In {\em SODA}, 2003.
+
+\bibitem{brandes2001faster}
+Ulrik Brandes.
+\newblock A faster algorithm for betweenness centrality.
+\newblock {\em Journal of Mathematical Sociology}, 2001.
+
+\bibitem{low2010graphlab}
+Yucheng Low et~al.
+\newblock Graphlab: A new parallel framework for machine learning.
+\newblock In {\em UAI}, 2010.
+
+\bibitem{malewicz2010pregel}
+Grzegorz Malewicz et~al.
+\newblock Pregel: a system for large-scale graph processing.
+\newblock In {\em SIGMOD}, 2010.
+
+\bibitem{shun2013ligra}
+Julian Shun and Guy~E. Blelloch.
+\newblock Ligra: a lightweight graph processing framework for shared memory.
+\newblock In {\em PPoPP}. ACM, 2013.
+
+\bibitem{shun2015ligra+}
+Julian Shun, Laxman Dhulipala, and Guy~E. Blelloch.
+\newblock Ligra+: graph processing with compression.
+\newblock In {\em Data Compression Conference}. IEEE, 2015.
+
+\end{thebibliography}
