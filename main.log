@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.11.28)  11 DEC 2025 17:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.11.28)  12 DEC 2025 11:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -676,18 +676,18 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 38210938871974E75A8A7D763EA78D85;2258.
+(rerunfilecheck)             Checksum: 0BF9C6455A862E2A86ADA90394D418D2;2255.
  ) 
 Here is how much of TeX's memory you used:
- 21519 strings out of 473190
- 365378 string characters out of 5715799
- 801905 words of memory out of 5000000
+ 21515 strings out of 473190
+ 365338 string characters out of 5715799
+ 800905 words of memory out of 5000000
  44251 multiletter control sequences out of 15000+600000
- 648313 words of font info for 169 fonts, out of 8000000 for 9000
+ 648124 words of font info for 167 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 81i,9n,93p,1062b,490s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 81i,9n,93p,1046b,490s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Free-Regular.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on main.pdf (4 pages, 266607 bytes).
+Output written on main.pdf (4 pages, 265830 bytes).
 PDF statistics:
  193 PDF objects out of 1000 (max. 8388607)
  154 compressed objects within 2 object streams
