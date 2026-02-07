@@ -44,12 +44,14 @@ This report explains the design choices behind Ligra and Ligra+, analyzes their 
 \section{Background and Graph Model}
 Both Ligra and Ligra+ operate on directed graphs $G=(V,E)$ where vertices are numbered $0$,to $|V|-1$. For each vertex $v$, the tools store outgoing neighbors $N^+(v)$ and incoming neighbors $N^{-}(v)$ alongside their degrees~\cite{shun2013ligra}. Computation uses fork-join parallelism with atomic instructions such as compare-and-swap (CAS) make sure results are correct when multiple writes happen at the same time.
 
+Fork-join parallelism structures computation as a sequence of parallel tasks that are recursively spawned (forked) and later synchronized (joined). In Ligra, this model allows vertex- and edge-level operations to execute in parallel while ensuring synchronization at well-defined points, such as after each traversal step.
+
 The fundamental abstraction is the \texttt{vertexSubset}, which represents an active frontier either as a sparse list of vertex identifiers or as a dense bitmap. The representation is selected dynamically based on frontier size.
 
 Ligra provides two main parallel operations:
 
 \begin{itemize}
-    \item \textbf{VERTEXMAP(U, F):} applies a Boolean function to each vertex in $U$ in parallel and returns the subset of vertices for which the function returns true.
+    \item \textbf{VERTEXMAP(U, F):} applies a Boolean function to each vertex in $U$ in parallel and returns the subset of vertices for which the  F returns true.
     \item \textbf{EDGEMAP(G, U, F, C):} processes edges from active sources in $U$, applies an update function $F$, and returns all target vertices that satisfy $C$ and for which the update succeeds.
 
 \end{itemize}
@@ -67,6 +69,12 @@ Ligra aims to provide a lightweight shared-memory alternative to distributed fra
 Ligra’s performance depends on smartly switching between sparse and dense modes when frontier size crosses a threshold proportional to $|E|$~\cite{shun2013ligra}. Sparse traversal examines only outgoing edges from active vertices, dense traversal checks all vertices using incoming edges.
 
 Graphs are stored in flat arrays for both in-edges and out-edges, minimizing overhead. The \texttt{vertexSubset} abstraction simplifies algorithms such as BFS and Brandes' betweenness centrality~\cite{brandes2001faster}.
+
+Switching between sparse and dense traversal is crucial because the efficiency of each strategy depends on the size of the active frontier. When the frontier is small, sparse traversal is faster since it processes only the outgoing edges of active vertices. As the frontier grows large, sparse traversal can become inefficient due to repeated scanning of many adjacency lists, while dense traversal becomes faster by scanning all vertices once and stopping early when a valid predecessor is found. Using only a single traversal strategy would either waste work for small frontiers (dense-only) or incur excessive memory traffic for large frontiers (sparse-only), making hybrid traversal essential for high performance.
+
+In BFS, the vertexSubset directly represents the current frontier, allowing each iteration to process only newly discovered vertices instead of scanning the entire graph. This abstraction cleanly separates traversal logic from data representation, enabling automatic switching between sparse and dense frontiers without algorithmic changes.
+
+Consider a BFS step with a frontier containing vertices $\{v_1, v_2\}$. In Ligra, the adjacency lists of $v_1$ and $v_2$ are scanned directly to discover new neighbors. In Ligra+, the same traversal is performed, but the neighbor lists are first decoded from their compressed representation before processing. Importantly, the algorithmic structure and frontier evolution remain unchanged; only the cost of accessing edges differs.
 
 \subsection{Applications}
 Common algorithms implemented in Ligra include:
@@ -108,6 +116,8 @@ Decoding uses two core operations:
 High-degree vertices are partitioned into chunks of size at most $T$, allowing parallel decoding with independent starting points, improving load balance on multi-core hardware.
 
 \subsection{Empirical Behavior}
+The reported performance results are based on experiments conducted on multi-core shared-memory machines with up to 40 hardware threads, using a mix of real-world and synthetic graphs with varying degree distributions. Ligra serves as the uncompressed baseline, and all speedups are measured relative to its execution time on the same hardware and datasets.
+
 Across real and synthetic datasets, Ligra+ uses roughly half the memory of Ligra. Compression benefits scale with repeating structural patterns.
 
 Single-threaded runtime is often slightly slower due to decompression. However, on 40-core machines, byte-coded Ligra+ achieves:
@@ -119,6 +129,8 @@ Single-threaded runtime is often slightly slower due to decompression. However, 
 \end{itemize}
 
 These gains appear when reduced memory traffic outweighs decoding overhead.
+
+Among the compression schemes evaluated in Ligra+, run-length encoded byte codes generally provide the best performance trade-off. While nibble codes achieve slightly better compression ratios, their higher decoding cost often reduces throughput. Plain byte codes decode faster but offer less space reduction. Empirical results show that run-length encoded byte codes achieve close to the memory savings of nibble codes while maintaining decoding speeds comparable to byte codes, leading to the highest average speedups on multi-core systems.
 
 \section{Comparative Analysis}
 
@@ -133,8 +145,12 @@ For small graphs or lightly threaded execution, Ligra often wins. For large grap
 \subsection{Algorithmic Sensitivity}
 Algorithms like BFS that perform little computation per edge benefit most from compression. Algorithms with heavier per-edge arithmetic, such as PageRank or Bellman-Ford, may hide decoding overhead, sometimes making Ligra+ faster in practice.
 
+For example, during BFS, Ligra processes the current frontier by directly scanning adjacency lists in memory, whereas Ligra+ must first decode the compressed neighbor lists before traversal. Although this introduces additional decoding work, the reduced memory footprint often leads to fewer cache misses and lower memory bandwidth usage. As a result, BFS, which performs little computation per edge, can run faster in Ligra+ despite the added decoding step. In contrast, algorithms such as PageRank perform more arithmetic per edge, making decoding overhead comparatively less significant.
+
 \section{Conclusion}
 Ligra demonstrates that a simple shared-memory framework can support a broad class of graph traversal algorithms both efficiently and expressively. Ligra+ extends this model by showing that lightweight compression can simultaneously reduce memory usage and improve performance on modern multicore processors. Together, both systems highlight the importance of data layout, memory bandwidth, and threading decisions in designing high-performance graph processing systems.
+
+Possible directions for \texttt{future} work include exploring adaptive compression schemes that dynamically change encoding formats based on degree distribution or runtime behavior. Another open question is how Ligra+’s compression techniques interact with emerging memory technologies such as high-bandwidth memory or non-volatile RAM. Finally, extending the framework to better support weighted and dynamic graphs remains an important area for further investigation.
 
 \bibliography{references}
 
